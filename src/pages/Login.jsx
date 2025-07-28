@@ -24,7 +24,7 @@ const changeInputHandler=(e)=>{
 <input type="email" name='email' placeholder='Email Address' onChange={changeInputHandler} autoComplete='true' />
 <input type="password" name='password' placeholder='Password' onChange={changeInputHandler} autoComplete='true' />
 
-         <p>Don't have an account? <Link to='/register'> sign up</Link></p>
+         <p>Don't have an account? <Link to='/register'> Sign up</Link></p>
           <button type='submit' className="btn primary">Login</button>
           
           </form>
