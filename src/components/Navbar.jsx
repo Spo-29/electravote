@@ -6,7 +6,7 @@ import { HiOutlineBars3 } from "react-icons/hi2";
 import { AiOutlineClose } from "react-icons/ai";
 
 const Navbar = () => {
-  const [showNav, setShowNav] = useState(false);
+  const [showNav, setShowNav] = useState(window.innerWidth < 600? false : true);
   const [darkTheme, setDarkTheme] = useState(
     localStorage.getItem("voting-app-theme")
   );
