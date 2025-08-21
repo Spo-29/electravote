@@ -2,7 +2,7 @@ import React from 'react'
 
 const ElectionDetails= () => {
     return (
-        // hello
+        // hello /heoo
         <div>ElectionDetails</div>
     )
 }
