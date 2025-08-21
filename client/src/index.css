@@ -127,8 +127,8 @@ button {
   background-color: #007bff; /* Bootstrap blue */
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 30px;
+  padding: 1rem 2rem;
+ border-radius: var(--radius-1);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -140,7 +140,7 @@ button {
 
 
 .btn.danger {
-  background: var(--color--danger);
+  background: var(--color-danger);
   color: white;
 }
 
@@ -152,10 +152,10 @@ button {
   width: 100%;
 }
 
-.btn {
+/*.btn {
   background: var(--color-gray-900);
   color: var(--color-gray-0);
-}
+}*/
 
 /*=========================== ERROR PAGE===========================*/
 .errorPage {
@@ -332,20 +332,294 @@ nav{
   padding: 3rem 1.5rem;
 }
 
+/*========================= RESULTS
+===========================*/
+.results{
+   margin: 5rem 0;
+   width: 58rem;
+   margin-inline: auto;
+}
+
+.results__container{
+  display: flex;
+  flex-direction: column;
+}
+
+.result{
+  background: var(--color-gray-0);
+  border-radius: var(--radius-4);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.result__header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-gray-100);
+  border: 0.5rem solid var(--color-gray-0);
+  border-radius: 1.5rem 1.5rem 0 0;
+}
+
+.result__header-image{
+  width: 3rem;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: 1.5rem;
+}
+
+.result__header h4{
+  padding: 1.5rem;
+}
+
+
+.result__list{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  padding-top: 1rem;
+}
+.result__candidate{
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.result__candidate-image{
+  height: 3.5rem;
+  aspect-ratio: 1/1;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.result__candidate-info{
+  width: 100%;
+}
+
+
+.result__candidate-rating{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.result__candidate-loader{
+  display: block;
+  width: 100%;
+  height: 0.4rem;
+  background: var(--color-gray-100);
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.result__candidate-loader span{
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-variant));
+  height: 100%;
+  display: block;
+}
+
+
+.results {
+  width: var(--container-w-sm);
+}
 
 
 
+/*========================= RESULTS============================*/
 
 
+.candidates {
+  margin: 5rem 0;
+}
+
+.candidates__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 60%;
+  margin-inline: auto;
+}
+
+.candidates__header p{
+  margin-bottom: 3rem;
+}
+
+.candidates__header p .btn.primary{
+  justify-content: center;
+}
+
+.candidates__container{
+
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 3rem;
+}
+
+.candidate{
+  background: var(--color-gray-0);
+  text-align: center;
+  border-radius: var(--radius-3);
+  padding-bottom: 1.2rem;
+  overflow: hidden;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
+  border: 0.5rem solid var(--color-gray-0);
+  transition: var(--transition);
+}
+
+.candidate:hover {
+  box-shadow: none;
+  border-color: var(--color-gray-100);
+}
+
+.candidate__image{
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  margin-inline: auto;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.candidate small{
+  display: block;
+  margin: 0.5rem 0 1rem;
+}
+
+.candidate .btn:hover {
+  background: var(--color-gray-900) ;
+  color: var(--color-gray-0) ;
+}
+
+.candidate .btn.primary:hover {
+  background: var(--color-gray-900) ;
+  color: var(--color-gray-0) ;
+}
 
 
+/*=========================== MODAL
+ ===========================*/
+ .modal{
+  backdrop-filter: blur(5px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.7);
+  display: grid;
+  place-items: center;
 
+ }
 
+ .modal__content{
+  background: var(--color-gray-0);
+  width: 35rem;
+  border-radius: var(--radius-5);
+  overflow: hidden;
 
+ }
 
+ .modal__header{
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
 
+ }
 
+ .modal h4{
+  color: white;
+ }
 
+ .modal__header button{
+  background: transparent;
+  font-size: 1.8rem;
+  color: white;
+
+ }
+
+ .modal__content form{
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  padding-bottom: 3rem;
+
+ }
+
+ .modal__content form input{
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-1);
+  color: var(--color-gray-900);
+
+ }
+
+ /*=========================== CONFIRM VOTE
+ ===========================*/
+.confirm__vote-content{
+  text-align: center;
+  border-radius: var(--radius-3);
+}
+
+.dark .confirm__vote-content{
+  background: #211f2e;
+}
+
+.confirm__vote-content h5{
+  margin: 2rem 0;
+  color: var(--color-primary);
+}
+
+.confirm__vote-image{
+  width: 15rem;
+  aspect-ratio: 1/1;
+  margin-inline: auto;
+  border-radius: var(--radius-3);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.confirm__vote-content p {
+  margin: 0.4rem 0 2.5rem;
+  padding: 0 2rem;
+
+}
+.confirm__vote-cta .btn:hover {
+  background: var(--color-gray-900) ;
+  color: var(--color-gray-0) ;
+}
+
+.confirm__vote-cta .btn.primary:hover {
+  background: var(--color-gray-900) ;
+  color: var(--color-gray-0) ;
+}
+
+.confirm__vote-cta{
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-inline: auto;
+  margin-bottom: 2rem;
+}
+
+.dark .confirm__vote-cta .btn{
+  color: white;
+}
 
 
 
