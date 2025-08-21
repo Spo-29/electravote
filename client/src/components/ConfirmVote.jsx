@@ -15,26 +15,26 @@ const ConfirmVote = () => {
 
   //get the selected candidates
   /*const fetchCandidate = () => {
-    candidates.find(candidate => {
+    candidates.forEach(candidate => {
       if (candidate.id === "c1") {
         setModalCandidate(candidate);
       }
     })
   }*/
-  const fetchCandidate = () => {
-    const candidate = candidates.find((candidate) => candidate.id === "c1");
-    if (candidate) {
-      setModalCandidate(candidate);
-    }
-  };
+   const fetchCandidate = () => {
+     const candidate = candidates.find((candidate) => candidate.id === "c1");
+     if (candidate) {
+       setModalCandidate(candidate);
+     }
+   };
 
   useEffect(() => {
     fetchCandidate();
   }, []);
 
-  if (!modalCandidate.image) {
-    return null;
-  }
+   if (!modalCandidate.image) {
+     return null;
+   }
 
   return (
     <section className="modal">
