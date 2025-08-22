@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { candidates } from "../data";
 import { useDispatch } from "react-redux";
 import { UiActions } from "../store/ui-slice";
+import { useSelector } from "react-redux";
+import { voteActions } from "../store/vote-slice";  
 
 const ConfirmVote = () => {
   const [modalCandidate, setModalCandidate] = useState({});
@@ -12,21 +14,23 @@ const ConfirmVote = () => {
   const closeCandidateModal = () => {
     dispatch(UiActions.closeVoteCandidateModal());
   };
+  const selectedVoteCandidate = useSelector(
+    state => state.vote.selectedVoteCandidate)
 
   //get the selected candidates
-  /*const fetchCandidate = () => {
+  const fetchCandidate = () => {
     candidates.forEach(candidate => {
-      if (candidate.id === "c1") {
+      if (candidate.id ==selectedVoteCandidate) {
         setModalCandidate(candidate);
       }
     })
-  }*/
-   const fetchCandidate = () => {
+  }
+   /*const fetchCandidate = () => {
      const candidate = candidates.find((candidate) => candidate.id === "c1");
      if (candidate) {
        setModalCandidate(candidate);
      }
-   };
+   };*/
 
   useEffect(() => {
     fetchCandidate();
@@ -38,7 +42,7 @@ const ConfirmVote = () => {
 
   return (
     <section className="modal">
-      <div className="modal__content confirm__vote-content">
+      <div className="modal_content confirm_vote-content">
         <h5>Please confirm your vote</h5>
         <div className="confirm__vote-image">
           <img src={modalCandidate.image} alt={modalCandidate.fullName} />

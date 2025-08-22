@@ -7,6 +7,7 @@ import AddElectionModal from '../components/AddElectionModal'
 import {useDispatch } from 'react-redux';
 import { UiActions } from '../store/ui-slice';
 import { useSelector } from 'react-redux';
+import UpdateElectionModal from '../components/UpdateElectionModal';
 
 const Elections= () => {
   const [elections,setElections] =useState(dummyElections)
@@ -14,9 +15,12 @@ const Elections= () => {
 const dispatch = useDispatch()
 const openModal = () => { dispatch(UiActions.openElectionModal()) }
 
-
+const closeUpdateModal = () => {
+    dispatch(UiActions.closeUpdateElectionModal());
+  };
 
 const electionModalShowing = useSelector(state => state.ui.electionModalShowing);
+const updateElectionModalShowing = useSelector(state => state.ui.updateElectionModalShowing);
 
     return (
         <>
@@ -38,6 +42,8 @@ const electionModalShowing = useSelector(state => state.ui.electionModalShowing)
 
 
        {electionModalShowing && <AddElectionModal/>}
+       {updateElectionModalShowing && <UpdateElectionModal closeModal={closeUpdateModal} />}
+
        </>
     )
    }

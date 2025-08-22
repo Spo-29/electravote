@@ -4,8 +4,13 @@ import { useDispatch } from 'react-redux';
 import { UiActions } from '../store/ui-slice';
 
 const Election = ({ id, title, description, thumbnail }) => {
-  const dispatch = useDispatch();
+const dispatch = useDispatch()
 
+
+  //open update election modal
+  const openModal = () => {
+    dispatch(UiActions.openUpdateElectionModal())
+  }
   return (
     <article className="election">
       <div className="election__image">
@@ -24,7 +29,7 @@ const Election = ({ id, title, description, thumbnail }) => {
           <Link to={`/elections/${id}`} className="btn sm">
             View
           </Link>
-          <button className="btn sm primary">Edit</button>
+          <button className="btn sm primary" onClick={openModal}>Edit</button>
         </div>
       </div>
     </article>
