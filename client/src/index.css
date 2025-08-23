@@ -507,22 +507,25 @@ nav{
 /*=========================== MODAL
  ===========================*/
  .modal{
-  backdrop-filter: blur(5px);
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 1000;
   height: 100vh;
   width: 100vw;
-  background: rgba(0, 0, 0, 0.7);
-  display: grid;
-  place-items: center;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+  
 
- }
+ 
 
  .modal__content{
   background: var(--color-gray-0);
-  width: 35rem;
+  width: auto;
   border-radius: var(--radius-5);
   overflow: hidden;
 
@@ -568,6 +571,19 @@ nav{
 
  }
 
+ .modal__content.confirm__vote-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem 2rem;
+  box-sizing: border-box;
+   padding: 2rem 2rem;
+   
+
+}
+
  /*=========================== CONFIRM VOTE
  ===========================*/
 .confirm__vote-content{
@@ -580,8 +596,15 @@ nav{
 }
 
 .confirm__vote-content h5{
-  margin: 2rem 0;
+   width: 100%;
+  text-align: center;
+  margin: 2rem 0 1rem 0; /* Top margin, less bottom margin */
   color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: block;
+  
 }
 
 .confirm__vote-image{
@@ -620,6 +643,7 @@ nav{
 .dark .confirm__vote-cta .btn{
   color: white;
 }
+
 /*===========================CONGRATS===========================*/
 .congrats{
  padding: 8rem 0;
