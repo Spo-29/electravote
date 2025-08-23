@@ -21,7 +21,7 @@ const changeInputHandler=(e)=>{
           <form>
            <p className="form__error-message"> Any error from the backend</p>
        
-<input type="email" name='email' placeholder='Email Address' onChange={changeInputHandler} autoComplete='true' />
+<input type="email" name='email' placeholder='Email Address' onChange={changeInputHandler} autoComplete='true' autoFocus />
 <input type="password" name='password' placeholder='Password' onChange={changeInputHandler} autoComplete='true' />
 
          <p>Don't have an account? <Link to='/register'> Sign up</Link></p>
