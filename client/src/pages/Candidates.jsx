@@ -19,14 +19,18 @@ const Candidates = () => {
   return (
     <>
       <section className="candidates">
-        <header className="candidates__header">
-          <h1>Vote your candidate</h1>
-          <p>
-            These are the candidates for the selected election. Please vote once
+        { candidates.length > 0 ? <header className="candidates__header">
+          <h1> Vote your Canduidate</h1>
+          <p>These are the candidates for the selected election. Please vote once
             and wisely, because you wont be allowed to be in this election
-            again.
-          </p>
-        </header>
+            again.</p> 
+            </header>: <header className="candidates__header">
+              <h1>Inactive Election</h1>
+              <p>There are no candidates found for this election. Please check
+                back later. </p>
+              </header>}
+
+         
         <div className="container candidates__container">
           {candidates.map((candidate) => (
             <Candidate key={candidate.id} {...candidate} />

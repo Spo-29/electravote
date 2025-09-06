@@ -1,16 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+//import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import { UiActions } from '../store/ui-slice';
+import { voteaction } from '../store/vote-slice';
+import { Link } from 'react-router-dom';
+//import { useDispatch } from 'react-redux';
+//import { UiActions } from '../store/ui-slice';
+//import { voteActions } from '../store/vote-slice';
 
-const Election = ({ id, title, description, thumbnail }) => {
+const Election = ({_id: id, title, description, thumbnail }) => {
 const dispatch = useDispatch()
 
 
   //open update election modal
   const openModal = () => {
     dispatch(UiActions.openUpdateElectionModal())
+    dispatch(voteaction.changeIdOfElectionToUpdate(id))
   }
+
+  const isAdmin = useSelector(state => state?.vote?.currentVoter?.isAdmin)
   return (
     <article className="election">
       <div className="election__image">
@@ -29,7 +37,7 @@ const dispatch = useDispatch()
           <Link to={`/elections/${id}`} className="btn sm">
             View
           </Link>
-          <button className="btn sm primary" onClick={openModal}>Edit</button>
+          {isAdmin && <button className="btn sm primary" onClick={openModal}>Edit</button>}
         </div>
       </div>
     </article>
