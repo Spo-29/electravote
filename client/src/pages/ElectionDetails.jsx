@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const ElectionDetails = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [election, setElection] = useState([])
+    const [election, setElection] = useState(null)
     const navigate = useNavigate()
     const { id } = useParams()
     const dispatch = useDispatch()
@@ -23,6 +23,8 @@ const ElectionDetails = () => {
        state => state?.vote?.currentVoter?.token
     )
     const isAdmin = useSelector((state) => state?.vote?.currentVoter?.isAdmin);
+    
+
 
     const getElection = async () => {
         setIsLoading(true)
@@ -37,6 +39,9 @@ const ElectionDetails = () => {
             console.log(error)
 
         }
+        finally {
+        setIsLoading(false)  // Add this line
+    }
     }
     
     
@@ -53,12 +58,19 @@ const ElectionDetails = () => {
 
         }catch (error) {
             console.log(error)
-        }
+        }finally {
+        setIsLoading(false)  // Add this line
+    }
 
     }
     useEffect(() => {
+      if(token) {
       getElection();
-    }, []);
+      }
+    }, [token]);
+    if (isLoading) return <div>Loading...</div>
+    if (!election) return <div>Election not found</div>
+
 
 
 
