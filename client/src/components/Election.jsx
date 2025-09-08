@@ -1,5 +1,6 @@
 import React from 'react';
 //import { Link } from 'react-router-dom';
+//import {elections as dummyElections} from '../data'
 import { useDispatch, useSelector } from "react-redux";
 import { UiActions } from '../store/ui-slice';
 import { voteaction } from '../store/vote-slice';
@@ -18,7 +19,9 @@ const dispatch = useDispatch()
     dispatch(voteaction.changeIdOfElectionToUpdate(id))
   }
 
-  const isAdmin = useSelector(state => state?.vote?.currentVoter?.isAdmin)
+const isAdmin = useSelector(state => state?.vote?.currentVoter?.isAdmin)
+
+
   return (
     <article className="election">
       <div className="election__image">

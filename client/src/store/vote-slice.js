@@ -1,5 +1,16 @@
 import{createSlice,current} from "@reduxjs/toolkit";
-const currentVoter=JSON.parse(localStorage.getItem("currentUser"))
+const currentVoter = JSON.parse(localStorage.getItem("currentUser")) || {
+  isAdmin: false,
+  name: "",
+  email: "",
+  token: ""
+};
+
+
+
+  
+
+
 const initialState={ selectedVoteCandidate:"",currentVoter,selectedElection: "",idOfElectionToUpdate: "",
     addCandidateElectionId:"" }
 

@@ -88,21 +88,39 @@ const getElection = async (req, res, next) => {
 }
 
 
+
+
+
+
 //====================== GET ELECTION CANDIDATES
 //GET : api/elections/id/candidates
 // PROTECTED 
 const getCandidatesOfElection = async (req, res, next) => {
-  res.json("Get candidates of election");
-}
+ try{
+  const {id} = req.params;  
+  const candidates = await CandidateModel.find({election: id})
+  res.status(200).json(candidates)
+} 
+  catch (error) { 
+  return next(new HttpError(error))
+  }
+} 
+
 
 
 //====================== GET VOTERS OF ELECTION
 //GET : api/elections/:id/voters
 // PROTECTED 
 const getElectionVoters = async (req, res, next) => {
-  res.json("Get election voters");
-}
+  try{
+    const {id} = req.params;
+    const response = await ElectionModel.findById(id).populate('voters')
+    res.status(200).json(response.voters)
+   } catch (error) {
+    return next(new HttpError(error))
+  }
 
+}
 
 //====================== UPDATE ELECTION
 //PATCH: api/elections/:id
@@ -190,4 +208,4 @@ const removeElection = async (req, res, next) => {
 
 
 module.exports = {addElection, getElections, getElection, updateElection, removeElection,
-     getCandidatesOfElection, getElectionVoters}
+     getCandidatesOfElection, getElectionVoters};

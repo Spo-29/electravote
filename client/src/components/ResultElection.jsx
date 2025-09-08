@@ -1,18 +1,32 @@
-import React, { useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
-import { candidates } from '../data'
+//import { candidates } from '../data'
 import CandidateRating from './CandidateRating'
 import Loader from "../components/Loader";
-
+import axios from 'axios'
+import { useSelector } from 'react-redux'
 const ResultElection = ({_id: id, thumbnail, title}) => {
-    const [totalVotes, setTotalVotes] = useState(521)
+    const [totalVotes, setTotalVotes] = useState(0)
     const [isLoading, setIsLoading] = useState(true); // Start with loading true
+    const   [ electionCandidates, setElectionCandidates] = useState([])
+    const token=useSelector(state => state?.vote?.currentVoter?.token);
 
-    // get candidates that belong to this election iteration
-    const electionCandidates = candidates.filter(candidate =>
-    {
-        return candidate.election == id
-    })
+   const getcandidates= async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/elections/${id}/candidates`, {withCredentials: true,headers: {Authorization: `Bearer ${token}`}})
+      const candidates=await response.data
+      setElectionCandidates(candidates)
+      for (let i = 0; i < candidates.length; i++) {
+        setTotalVotes(prevVotes => prevVotes + candidates[i].votes);
+      }
+    
+    } catch (error) {
+      console.log(error)
+    } }
+
+useEffect(() => {
+    getcandidates()
+}, [])
 
     // Simulate loading finished after filter
     React.useEffect(() => {

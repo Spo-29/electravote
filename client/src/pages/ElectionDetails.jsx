@@ -11,8 +11,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiActions } from '../store/ui-slice'
 import AddCandidateModal from '../components/AddCandidateModal'
 import { useNavigate } from "react-router-dom";
+import { voteaction } from '../store/vote-slice'
+import { Navigate } from 'react-router-dom'
+const ElectionDetails = () => { 
 
-const ElectionDetails = () => {
+   
+  useEffect(() => {
+        if(!token)
+        {
+          Navigate('/')
+        }
+      },[])
     const [isLoading, setIsLoading] = useState(false)
     const [election, setElection] = useState(null)
     const navigate = useNavigate()
@@ -48,6 +57,7 @@ const ElectionDetails = () => {
     //open add candidate modal
     const openModal = () => {
         dispatch(UiActions.openAddCandidateModal())
+        dispatch(voteaction.changeAddCandidateElectionId(id))
     }
     const deleteElection = async () => {
         try {

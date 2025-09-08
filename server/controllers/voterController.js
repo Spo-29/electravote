@@ -83,7 +83,17 @@ const loginVoter = async (req, res, next) => {
     const { _id: id, isAdmin, votedElections } = voter;
     const token = generateToken({ id, isAdmin });
 
-    res.json({ token, id, votedElections, isAdmin });
+     res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id,
+        fullName,
+        email: voterEmail,
+        isAdmin,
+        votedElections,
+      }
+    });
   } catch (error) {
     return next(
       new HttpError(

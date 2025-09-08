@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { candidates as dummyCandidates } from "../data";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Candidate from "../components/Candidate";
 import ConfirmVote from "../components/ConfirmVote";
 import { useSelector } from "react-redux";
 
-const Candidates = () => {
+const Candidates = () => { 
+  const token = useSelector(state => state?.vote?.currentVoter?.token)
+  useEffect(() => {
+    if(!token)
+    {
+      Navigate('/')
+    }
+  },[])
+  
   const {id} = useParams()
 
   const voteCandidateModalShowing = useSelector(
@@ -15,7 +23,8 @@ const Candidates = () => {
   //get candidates that belong to this election
   const candidates = dummyCandidates.filter(
     candidate => candidate.election == id
-  )
+  ) 
+ 
   return (
     <>
       <section className="candidates">
