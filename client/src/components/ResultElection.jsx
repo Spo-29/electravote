@@ -1,27 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
-import { candidates } from '../data'
+//import { candidates } from '../data'
 import CandidateRating from './CandidateRating'
 import Loader from "../components/Loader";
+import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 const ResultElection = ({_id: id, thumbnail, title}) => {
-    const [totalVotes, setTotalVotes] = useState(521)
-    const [isLoading, setIsLoading] = useState(true); // Start with loading true
+    const [totalVotes, setTotalVotes] = useState(0)
+    const [electionCandidates, setElectionCandidates ] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
+    
+    const token = useSelector( state => state?.vote?.currentVoter.token);// Start with loading true
 
-    // get candidates that belong to this election iteration
-    const electionCandidates = candidates.filter(candidate =>
-    {
-        return candidate.election == id
-    })
+    const getCandidates = async () => {
+      setIsLoading(true)
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/elections/${id}/candidates`, {withCredentials: true, headers:
+          {Authorization: `Bearer ${token}`}
+          
+        })
+        const candidates = await response.data;
+        setElectionCandidates(candidates)
+        // calculate the total votes in each election
+        for(let i = 0; i< candidates.length; i++) {
+          setTotalVotes(prevState => prevState += candidates[i].voteCount)
+        }
 
-    // Simulate loading finished after filter
-    React.useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 500); // Show loader for 500ms
-        
-        return () => clearTimeout(timer);
-    }, []);
+
+      }catch(error) {
+        console.log(error)
+      }
+      setIsLoading(false)
+
+
+    }
+    useEffect(() => {
+      getCandidates()
+    }, [])
     return (
       <>
         {isLoading && <Loader />}

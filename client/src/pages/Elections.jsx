@@ -9,10 +9,19 @@ import { UiActions } from '../store/ui-slice';
 import { useSelector } from 'react-redux';
 import UpdateElectionModal from '../components/UpdateElectionModal';
 import Loader from "../components/Loader";
-
+import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
 const Elections= () => {
+   const token = useSelector((state) => state?.vote?.currentVoter?.token);
+   const navigate = useNavigate()
+         //access control
+         useEffect(() => {
+           if(!token) {
+             navigate('/')
+           }
+       
+         }, [])
   const [elections,setElections] =useState([])
   const[isLoading, setIsLoading] = useState(false)
 
@@ -22,7 +31,7 @@ const openModal = () => { dispatch(UiActions.openElectionModal()) }
 const closeUpdateModal = () => {
     dispatch(UiActions.closeUpdateElectionModal());
   };
-  const token = useSelector(state => state?.vote?.currentVoter?.token)
+  
   const isAdmin = useSelector(state => state?.vote?.currentVoter.isAdmin)
 
 const electionModalShowing = useSelector(state => state.ui.electionModalShowing);

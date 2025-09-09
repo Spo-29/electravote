@@ -1,6 +1,19 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Congrats = () => {
+     const navigate = useNavigate()
+      const token = useSelector((state) => state?.vote?.currentVoter?.token);
+    
+      //access control
+      useEffect(() => {
+        if(!token) {
+          navigate('/')
+        }
+    
+      }, [])
     return ( 
         <section className="congrats" 
 >
