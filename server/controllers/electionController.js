@@ -3,7 +3,8 @@ const HttpError = require("../models/ErrorModel");
 const cloudinary = require('../utils/cloudinary')
 const path = require("path")
 const ElectionModel = require('../models/electionModel')
-const CandidateModel = require("../models/candidateModel");
+const CandidateModel = require('../models/candidateModel')
+const VoterModel = require('../models/voterModel')
 
 
 
@@ -11,48 +12,57 @@ const CandidateModel = require("../models/candidateModel");
 //POST: api/elections
 // PROTECTED (only admin)
 const addElection = async (req, res, next) => {
-  // only admin can add election
-  if(!req.user.isAdmin){
-      return next(new HttpError("Only an admin can perform this action.", 403))
-  }
+  
   try{
-    const {title, description} = req.body;
-    if(!title || !description) {
-      return next(new HttpError("Fill all fields.", 422))
+    // only admin can add election
+    if (!req.user.isAdmin) {
+      return next(new HttpError("Only an admin can perform this action.", 403));
     }
-    
-    if(!req.files.thumbnail) {
-      return next(new HttpError("Choose a thumbnail.", 422))
+    const { title, description } = req.body;
+    if (!title || !description) {
+      return next(new HttpError("Fill all fields.", 422));
     }
-    
-    const {thumbnail} = req.files;
+
+    if (!req.files.thumbnail) {
+      return next(new HttpError("Choose a thumbnail.", 422));
+    }
+
+    const { thumbnail } = req.files;
     //img should be less than 1 mb
-    if(thumbnail.size > 1000000){
-      return next(new HttpError("File size too big. Should be less than 1mb"))
+    if (thumbnail.size > 1000000) {
+      return next(new HttpError("File size too big. Should be less than 1mb"));
     }
 
     //rename the image
     let fileName = thumbnail.name;
-    fileName = fileName.split(".")
-    fileName = fileName[0] + uuid() + "." + fileName[fileName.length-1]
+    fileName = fileName.split(".");
+    fileName = fileName[0] + uuid() + "." + fileName[fileName.length - 1];
     //upload file to uploads folder in project
-    await thumbnail.mv(path.join(__dirname, '..', 'uploads', fileName), async (err) => {
-    
-    if(err) {
-      return next(new HttpError())
-    }
-    // store image on cloudinary
-    const result = await cloudinary.uploader.upload(path.join(__dirname,"..", "uploads", fileName), {resource_type: "image"})
-    if(!result.secure_url) {
-      return next (new HttpError("Couldnot upload an image to cloudinary", 422))
-    }
-    //save election to db
-    const  newElection = await ElectionModel.create({title, description, thumbnail: result.secure_url})
-    res.json(newElection)
-  })
-
-
-
+    await thumbnail.mv(
+      path.join(__dirname, "..", "uploads", fileName),
+      async (err) => {
+        if (err) {
+          return next(new HttpError());
+        }
+        // store image on cloudinary
+        const result = await cloudinary.uploader.upload(
+          path.join(__dirname, "..", "uploads", fileName),
+          { resource_type: "image" }
+        );
+        if (!result.secure_url) {
+          return next(
+            new HttpError("Couldnot upload an image to cloudinary", 422)
+          );
+        }
+        //save election to db
+        const newElection = await ElectionModel.create({
+          title,
+          description,
+          thumbnail: result.secure_url,
+        });
+        res.json(newElection);
+      }
+    );
   } catch (error) {
       return next(new HttpError(error))
   }
@@ -92,7 +102,16 @@ const getElection = async (req, res, next) => {
 //GET : api/elections/id/candidates
 // PROTECTED 
 const getCandidatesOfElection = async (req, res, next) => {
-  res.json("Get candidates of election");
+      try{
+        const {id} = req.params;
+        const candidates = await CandidateModel.find({election: id})
+        res.status(200).json(candidates)
+
+      }catch(error)
+      {
+        return next(new HttpError(error))
+
+      }
 }
 
 
@@ -100,7 +119,15 @@ const getCandidatesOfElection = async (req, res, next) => {
 //GET : api/elections/:id/voters
 // PROTECTED 
 const getElectionVoters = async (req, res, next) => {
-  res.json("Get election voters");
+  try {
+    const {id} = req.params;
+    const response = await ElectionModel.findById(id).populate('voters')
+    res.status(200).json(response.voters)
+
+  }catch (error) {
+    return next(new HttpError(error))
+  }
+  
 }
 
 

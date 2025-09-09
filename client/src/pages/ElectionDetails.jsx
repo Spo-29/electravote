@@ -11,17 +11,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { UiActions } from '../store/ui-slice'
 import AddCandidateModal from '../components/AddCandidateModal'
 import { useNavigate } from "react-router-dom";
+import { voteaction } from '../store/vote-slice'
 
 const ElectionDetails = () => {
+  const token = useSelector((state) => state?.vote?.currentVoter?.token);
+  const navigate = useNavigate();
+   useEffect(() => {
+          if(!token) {
+            navigate('/')
+          }
+      
+        }, [])
     const [isLoading, setIsLoading] = useState(false)
     const [election, setElection] = useState(null)
-    const navigate = useNavigate()
+    const [candidates, setCandidates] = useState([]);
+     const [voters, setVoters] = useState([]);
+    
     const { id } = useParams()
     const dispatch = useDispatch()
     const addCandidateModalShowing = useSelector(state => state.ui.addCandidateModalShowing)
-    const token = useSelector(
-       state => state?.vote?.currentVoter?.token
-    )
+    
     const isAdmin = useSelector((state) => state?.vote?.currentVoter?.isAdmin);
     
 
@@ -48,6 +57,7 @@ const ElectionDetails = () => {
     //open add candidate modal
     const openModal = () => {
         dispatch(UiActions.openAddCandidateModal())
+        dispatch(voteaction.changeAddCandidateElectionId(id))
     }
     const deleteElection = async () => {
         try {
@@ -63,9 +73,40 @@ const ElectionDetails = () => {
     }
 
     }
+     const getCandidates = async () => {
+       
+       try {
+         const response = await axios.get(
+           `${process.env.REACT_APP_API_URL}/elections/${id}/candidates`,
+           {
+             withCredentials: true,
+             headers: { Authorization: `Bearer ${token}` },
+           }
+         );
+         setCandidates(response.data);
+       } catch (error) {
+         console.log(error);
+       } 
+     };
+     const getVoters = async () => {
+       try {
+         const response = await axios.get(
+           `${process.env.REACT_APP_API_URL}/elections/${id}/voters`,
+           {
+             withCredentials: true,
+             headers: { Authorization: `Bearer ${token}` },
+           }
+         );
+         setVoters(response.data);
+       } catch (error) {
+         console.log(error);
+       }
+     };
     useEffect(() => {
       if(token) {
       getElection();
+      getCandidates();
+      getVoters()
       }
     }, [token]);
     if (isLoading) return <div>Loading...</div>
@@ -84,9 +125,9 @@ const ElectionDetails = () => {
               <img src={election.thumbnail} alt={election.title} />
             </div>
             <menu className="electionDetails__candidates">
-              {/*electionCandidates.map((candidate) => (
-                <ElectionCandidate key={candidate.id} {...candidate} />
-              ))*/}
+              {candidates.map((candidate) => (
+                <ElectionCandidate key={candidate._id} {...candidate} />
+              ))}
             {isAdmin &&  <button className="add_candidate-btn" onClick={openModal}>
                 <IoAddOutline />
               </button>}
@@ -103,15 +144,15 @@ const ElectionDetails = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/*voters.map((voter) => (
-                    <tr key={voter.id}>
+                  {voters.map((voter) => (
+                    <tr key={voter._id}>
                       <td>
                         <h5>{voter.fullName}</h5>
                       </td>
                       <td>{voter.email}</td>
-                      <td>14:43:34</td>
+                      <td>{voter.createdAt}</td>
                     </tr>
-                  ))*/}
+                  ))}
                 </tbody>
               </table>
             </menu>
