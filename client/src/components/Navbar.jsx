@@ -13,6 +13,7 @@ const Navbar = () => {
 
   // function to close nav menu on small screens when menu link is clicked
 const token =useSelector(state => state?.vote?.currentVoter?.token)
+console.log("Token:", token); // Add this line to check the token value
   const closeNavMenu = () => {
     if (window.innerWidth < 600) {
       setShowNav(false);

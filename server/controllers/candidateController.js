@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 const path = require("path")
 const ElectionModel = require('../models/electionModel')
 const CandidateModel = require("../models/candidateModel");
+const VoterModel = require("../models/voterModel");
+
+
+
 
 //====================== ADD CANDIDATE
 //POST : api/candidates
@@ -66,7 +70,13 @@ catch (error) {
 //GET : api/candidates/:id
 // PROTECTED
 const getCandidate = async(req, res, next) => {
-  res.json("Get Candidate")
+  try {
+    const {id} = req.params;
+    const candidate = await CandidateModel.findById(id)
+    res
+  } catch (error) {
+    return next(new HttpError(error))
+  }
 }
 
 
@@ -74,7 +84,29 @@ const getCandidate = async(req, res, next) => {
 //DELETE : api/candidates/:id
 // PROTECTED (only admin)
 const removeCandidate = async (req, res, next) => {
-  res.json("Delete Candidate")
+  try {
+    //only admin can delete a candidate
+    if(!req.user.isAdmin){
+      return next(new HttpError("Only an admin can perform this action.", 403))
+  }
+  const {id} = req.params;
+  let currentCandidate = await CandidateModel.findById(id).populate('election')
+  if(!currentCandidate) {
+    return next(new HttpError("Couldn't delete candidate", 422))
+  }
+  else {
+    const sess = await mongoose.startSession()
+    sess.startTransaction()
+    await currentCandidate.deleteOne({session: sess})
+    currentCandidate.election.candidates.pull(currentCandidate);
+    await currentCandidate.election.save({session: sess})
+    await sess.commitTransaction()
+
+    res.status(200).json("Candidate deleted successfully.")
+  }
+ } catch (error) {
+    return next(new HttpError(error))
+  }
 }
 
 
@@ -82,7 +114,31 @@ const removeCandidate = async (req, res, next) => {
 //PATCH : api/candidates/:id
 // PROTECTED (only admin)
 const voteCandidate = async (req, res, next) => {
-  res.json("Vote Candidate")
-}
+  try {
+    const{id: candidateId} = req.params;
+    const{selectedElection} = req.body;
+    //get the candidate
+    const candidate = await CandidateModel.findById(candidateId);
+    const newVoteCount = candidate.voteCount + 1;
+    //update candidate's votes
+    await CandidateModel.findByIdAndUpdate(candidateId, {voteCount: newVoteCount}, {new: true})
+    //start session for relationship between voter and election
+    const sess = await mongoose.startSession()
+    sess.startTransaction();
+    //get the current voter
+    let voter= await VoterModel.findById(req.user.id)
+    await voter.save({session: sess})
+    //get selected election
+    let election = await ElectionModel.findById(selectedElection);
+    election.voters.push(voter);
+    voter.votedElections.push(election);
+    await election.save({session: sess})
+    await voter.save({session: sess})
+    await sess.commitTransaction()
+    res.status(200).json(voter.votedElections)
 
+} catch (error) { 
+    return next(new HttpError(error))
+}
+}
 module.exports = {addCandidate, getCandidate, removeCandidate, voteCandidate}
